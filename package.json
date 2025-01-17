@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run services:up && next dev",
-    "services:up": "nerdctl compose -f infra/compose.yml up -d",
-    "services:stop": "nerdctl compose -f infra/compose.yml stop",
-    "services:down": "nerdctl compose -f infra/compose.yml down --remove-orphans",
+    "services:up": "podman compose -f infra/compose.yml up -d",
+    "services:stop": "podman compose -f infra/compose.yml stop",
+    "services:down": "podman compose -f infra/compose.yml down --remove-orphans",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",

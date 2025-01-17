@@ -1,10 +1,17 @@
-import database from "infra/database.js";
+import database from "infra/database";
 
 async function status(request, response) {
-  const result = await database.query('SELECT 1 + 1 as sum');
-  console.log(`sum: ${result.rows.at(0).sum}`);
+  const updatedAt = new Date().toISOString();
+  const query = `select regexp_match(version(), '(?i)postgresql\\s[\\d.?]+') as version,
+  current_setting('max_connections') as max_connections,
+  (select count(*) as used_connections from pg_stat_activity where datname = 'local_db' and state = 'active') as used_connections;`;
+  const responseBody = (await database.query(query)).rows.at(0);
+  console.log(responseBody);
   response.status(200).json({
-    result: 'status working'
+    updated_at: updatedAt,
+    version: responseBody.version,
+    max_connections: parseInt(responseBody.max_connections),
+    used_connections: parseInt(responseBody.used_connections)
   });
 }
 
